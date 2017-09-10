@@ -1,6 +1,5 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var jwt = require('jsonwebtoken');
 var morgan = require('morgan');
 var passport = require('passport');
 var cors = require('cors');
@@ -20,7 +19,10 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 app.use('/api', apiRoutes);
 
+var authControllers = require('./controllers/auth')(userModel, process.env.SECRET_KEY, 4000);
 
+apiRoutes.post('/register', authControllers.register);
+apiRoutes.post('/login', authControllers.login);
 
 
 
