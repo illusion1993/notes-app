@@ -1,0 +1,23 @@
+{
+  "name": "notes-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vikram Singh Rathore <rathore.vikram624@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^8.0.0",
+    "mongoose": "^4.11.5",
+    "mongoose-paginate": "^5.0.3",
+    "morgan": "^1.8.2",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0"
+  }
+}
