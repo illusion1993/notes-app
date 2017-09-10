@@ -2,6 +2,9 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
 module.exports = function (dbConnection) {
+
+	var dashboardModel = require('./dashboard')(dbConnection);
+
 	// User Schema
 	var userSchema = new mongoose.Schema({
 		first_name: {
@@ -58,6 +61,28 @@ module.exports = function (dbConnection) {
 				callback(null, isMatch);
 			}
 		})
+	};
+
+	// Method to retrieve dashboard
+	userSchema.methods.getDashboard = function(callback) {
+		var user = this;
+		dashboardModel.findOne({user: mongoose.Types.ObjectId(user._id)}, function(err, dash) {
+			if (err) {
+				callback(err);
+			}
+			if (!dash) {
+				var dashboard = new dashboardModel({
+					user: user
+				});
+				dashboard.save(function(err, dash) {
+					callback(err, dash);
+				});
+			}
+			else {
+				dash.user = user;
+				callback(err, dash);
+			}
+		});
 	};
 
 	var userModel = dbConnection.model('User', userSchema);

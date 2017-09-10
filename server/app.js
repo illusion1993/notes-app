@@ -20,9 +20,14 @@ app.use(passport.initialize());
 app.use('/api', apiRoutes);
 
 var authControllers = require('./controllers/auth')(userModel, process.env.SECRET_KEY, 4000);
+var dashboardControllers = require('./controllers/dashboard')(userModel);
 
+// Authentication routes
 apiRoutes.post('/register', authControllers.register);
 apiRoutes.post('/login', authControllers.login);
+
+// Dashboard routes
+apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), dashboardControllers.dashboard);
 
 
 
