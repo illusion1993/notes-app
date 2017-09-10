@@ -11,6 +11,8 @@ var cors			= require('cors');
 var app				= express();
 var apiRoutes		= express.Router();
 
+var dbConnection	= require('./utils/dbConnection')('notes', process.env.MONGO_USER, process.env.MONGO_PASSWORD, process.env.MONGO_PORT);
+
 const PORT = 8000;
 
 
