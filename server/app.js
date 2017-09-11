@@ -30,6 +30,8 @@ apiRoutes.post('/login', authControllers.login);
 apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), dashboardControllers.dashboard);
 apiRoutes.post('/dashboard/domain', passport.authenticate('jwt', { session: false }), dashboardControllers.addDomain);
 apiRoutes.delete('/dashboard/domain', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteDomain);
+apiRoutes.post('/dashboard/tag', passport.authenticate('jwt', { session: false }), dashboardControllers.addTag);
+apiRoutes.delete('/dashboard/tag', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteTag);
 
 
 

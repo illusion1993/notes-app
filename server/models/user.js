@@ -4,6 +4,7 @@ var bcrypt = require('bcrypt');
 module.exports = function (dbConnection) {
 
 	var dashboardModel = require('./dashboard')(dbConnection);
+	var subdocsManip = require('../utils/subdocsManip');
 
 	function fetchDashboardFromUserId (user_id, callback) {
 		dashboardModel.findOne({user: mongoose.Types.ObjectId(user_id)}, function(err, dash) {
@@ -91,8 +92,8 @@ module.exports = function (dbConnection) {
 		});
 	};
 
-	// Method to add a new Domain
-	userSchema.methods.addEditDeleteDomain = function(payload, isDelete, callback) {
+	// Method to add/edit/delete a new Domain
+	userSchema.methods.addEditDeleteDomain = function(payload, is_delete, callback) {
 		var user = this;
 		var domain = {
 			_id: payload._id,
@@ -106,61 +107,42 @@ module.exports = function (dbConnection) {
 				callback(err);
 			}
 			else {
-				var id_index = -1, same_title_id = undefined;
-				dash.domains.forEach(function(obj, index) {
-					if (obj._id == domain._id)
-						id_index = index;
-					if (obj.title == domain.title)
-						same_title_id = obj._id;
-				});
-				
-				if (isDelete) {
-					if (id_index >= 0) {
-						dash.domains[id_index].remove();
-						dash.save(function(err, dash) {
-							callback(err);
-						});
-					}
-					else {
-						callback(new Error('Domain not found'));
-					}
-				}
-				else {
-					if (!domain._id) {
-						if (!same_title_id) {
-							dash.domains.push(domain);
-							dash.save(function(err, dash) {
-								callback(err, dash.domains[dash.domains.length - 1]);
-							});
-						}
-						else {
-							callback(new Error('Title already exists'));
-						}
-					}
-					else {
-						if (id_index >= 0) {
-							if (same_title_id == domain._id || !same_title_id) {
-								dash.domains[id_index] = domain;
-								dash.save(function(err, dash) {
-									callback(err, dash.domains[id_index]);
-								});
-							}
-							else {
-								callback(new Error('Title already exists'));
-							}
-						}
-						else {
-							domain._id = undefined;
-							dash.domains.push(domain);
-							dash.save(function(err, dash) {
-								callback(err, dash.domains[dash.domains.length - 1]);
-							});
-						}
-					}
-				}
+				subdocsManip.handleSubdocArray(
+						dash,
+						domain,
+						'domains',
+						['title'],
+						is_delete,
+						callback
+					);
 			}
 		});
-	}
+	};
+
+	// Method to add/edit/delete a new Tag
+	userSchema.methods.addEditDeleteTag = function(payload, is_delete, callback) {
+		var user = this;
+		var tag = {
+			_id: payload._id,
+			title: payload.title,
+		};
+
+		fetchDashboardFromUserId(this._id, function(err, dash) {
+			if (err) {
+				callback(err);
+			}
+			else {
+				subdocsManip.handleSubdocArray(
+						dash,
+						tag,
+						'tags',
+						['title'],
+						is_delete,
+						callback
+					);
+			}
+		});
+	};
 
 	var userModel = dbConnection.model('User', userSchema);
 
