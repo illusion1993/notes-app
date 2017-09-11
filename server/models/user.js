@@ -86,13 +86,11 @@ module.exports = function (dbConnection) {
 						callback(err);
 					else {
 						notes_count = count;
-						console.log(notes_count);
 						noteModel.count({user: mongoose.Types.ObjectId(user._id)}, function(err, count) {
 							if (err)
 								callback(err);
 							else {
 								note_lists_count = count;
-								console.log(note_lists_count);
 								if (!dash) {
 									var dashboard = new dashboardModel({
 										user: user
