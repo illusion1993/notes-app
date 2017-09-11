@@ -28,6 +28,8 @@ apiRoutes.post('/login', authControllers.login);
 
 // Dashboard routes
 apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), dashboardControllers.dashboard);
+apiRoutes.post('/dashboard/domain', passport.authenticate('jwt', { session: false }), dashboardControllers.addDomain);
+apiRoutes.delete('/dashboard/domain', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteDomain);
 
 
 

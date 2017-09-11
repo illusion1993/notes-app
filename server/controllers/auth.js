@@ -39,7 +39,6 @@ module.exports = function (userModel, secretKey, tokenExpiry) {
 						user.comparePassword(req.body.password, function(err, isMatch) {
 							if (isMatch && !err) {
 								user = JSON.parse(JSON.stringify(user));
-
 								var token = jwt.sign(user, secretKey, { expiresIn: tokenExpiry });
 								res.json({ success: true, token: 'JWT ' + token });
 							}
