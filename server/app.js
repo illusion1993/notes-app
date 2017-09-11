@@ -32,6 +32,8 @@ apiRoutes.post('/dashboard/domain', passport.authenticate('jwt', { session: fals
 apiRoutes.delete('/dashboard/domain', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteDomain);
 apiRoutes.post('/dashboard/tag', passport.authenticate('jwt', { session: false }), dashboardControllers.addTag);
 apiRoutes.delete('/dashboard/tag', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteTag);
+apiRoutes.post('/dashboard/note-type', passport.authenticate('jwt', { session: false }), dashboardControllers.addNoteType);
+apiRoutes.delete('/dashboard/note-type', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteNoteType);
 
 
 

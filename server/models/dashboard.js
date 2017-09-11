@@ -59,7 +59,7 @@ module.exports = function (dbConnection) {
 		},
 		icon: {
 			type: mongoose.Schema.Types.ObjectId,
-			required: true
+			required: false
 		}
 	});
 

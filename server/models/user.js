@@ -107,14 +107,7 @@ module.exports = function (dbConnection) {
 				callback(err);
 			}
 			else {
-				subdocsManip.handleSubdocArray(
-						dash,
-						domain,
-						'domains',
-						['title'],
-						is_delete,
-						callback
-					);
+				subdocsManip.handleSubdocArray(dash, domain, 'domains', ['title'], is_delete, callback);
 			}
 		});
 	};
@@ -132,14 +125,26 @@ module.exports = function (dbConnection) {
 				callback(err);
 			}
 			else {
-				subdocsManip.handleSubdocArray(
-						dash,
-						tag,
-						'tags',
-						['title'],
-						is_delete,
-						callback
-					);
+				subdocsManip.handleSubdocArray(dash, tag, 'tags', ['title'], is_delete, callback);
+			}
+		});
+	};
+
+	// Method to add/edit/delete a new NoteType
+	userSchema.methods.addEditDeleteNoteType = function(payload, is_delete, callback) {
+		var user = this;
+		var note_type = {
+			_id: payload._id,
+			title: payload.title,
+			icon: payload.icon,
+		};
+
+		fetchDashboardFromUserId(this._id, function(err, dash) {
+			if (err) {
+				callback(err);
+			}
+			else {
+				subdocsManip.handleSubdocArray(dash, note_type, 'note_types', ['title'], is_delete, callback);
 			}
 		});
 	};

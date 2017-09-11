@@ -54,6 +54,28 @@ module.exports = function (userModel) {
 					res.json({ success: true, message: "Deleted tag" });
 				}
 			});
+		},
+
+		addNoteType: function(req, res) {
+			req.user.addEditDeleteNoteType(req.body, false, function(err, note_type) {
+				if (err || !note_type) {
+					res.status(500).json({success: false, message: "Error occured, Can not create note-type"})
+				}
+				else {
+					res.json({ success: true, data: note_type });
+				}
+			});
+		},
+
+		deleteNoteType: function(req, res) {
+			req.user.addEditDeleteNoteType(req.body, true, function(err) {
+				if (err) {
+					res.status(500).json({success: false, message: "Error occured, Can not delete note-type"})
+				}
+				else {
+					res.json({ success: true, message: "Deleted note-type" });
+				}
+			});
 		}
 	}
 
