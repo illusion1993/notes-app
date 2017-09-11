@@ -149,6 +149,26 @@ module.exports = function (dbConnection) {
 		});
 	};
 
+	// Method to add/edit/delete a new widget
+	userSchema.methods.addEditDeleteWidget = function(payload, is_delete, callback) {
+		var user = this;
+		var widget = {
+			_id: payload._id,
+			title: payload.title,
+			widget_type: payload.widget_type,
+			references: payload.references
+		};
+
+		fetchDashboardFromUserId(this._id, function(err, dash) {
+			if (err) {
+				callback(err);
+			}
+			else {
+				subdocsManip.handleSubdocArray(dash, widget, 'widgets', ['title'], is_delete, callback);
+			}
+		});
+	};
+
 	var userModel = dbConnection.model('User', userSchema);
 
 	return userModel;

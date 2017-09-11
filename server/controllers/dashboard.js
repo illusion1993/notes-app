@@ -76,6 +76,28 @@ module.exports = function (userModel) {
 					res.json({ success: true, message: "Deleted note-type" });
 				}
 			});
+		},
+
+		addWidget: function(req, res) {
+			req.user.addEditDeleteWidget(req.body, false, function(err, widget) {
+				if (err || !widget) {
+					res.status(500).json({success: false, message: "Error occured, Can not create widget"})
+				}
+				else {
+					res.json({ success: true, data: widget });
+				}
+			});
+		},
+
+		deleteWidget: function(req, res) {
+			req.user.addEditDeleteWidget(req.body, true, function(err) {
+				if (err) {
+					res.status(500).json({success: false, message: "Error occured, Can not delete widget"})
+				}
+				else {
+					res.json({ success: true, message: "Deleted widget" });
+				}
+			});
 		}
 	}
 

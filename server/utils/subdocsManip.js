@@ -34,13 +34,19 @@ module.exports.handleSubdocArray = function (doc, subdoc_payload, array_field_na
 				subdoc_payload._id = undefined;
 				doc[array_field_name].push(subdoc_payload);
 				doc.save(function(err, doc) {
-					callback(err, doc[array_field_name][doc[array_field_name].length- 1]);
+					if (err)
+						callback(err);
+					else
+						callback(err, doc[array_field_name][doc[array_field_name].length- 1]);
 				});
 			}
 			else {
 				doc[array_field_name][index_of_this_subdoc] = subdoc_payload;
 				doc.save(function(err, doc) {
-					callback(err, doc[array_field_name][index_of_this_subdoc]);
+					if (err)
+						callback(err);
+					else
+						callback(err, doc[array_field_name][index_of_this_subdoc]);
 				});
 			}
 		}
