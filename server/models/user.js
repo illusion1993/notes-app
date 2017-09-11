@@ -4,6 +4,8 @@ var bcrypt = require('bcrypt');
 module.exports = function (dbConnection) {
 
 	var dashboardModel = require('./dashboard')(dbConnection);
+	var noteModel = require('./note')(dbConnection);
+	var noteListModel = require('./noteList')(dbConnection);
 	var subdocsManip = require('../utils/subdocsManip');
 
 	function fetchDashboardFromUserId (user_id, callback) {
@@ -77,17 +79,44 @@ module.exports = function (dbConnection) {
 			if (err) {
 				callback(err);
 			}
-			if (!dash) {
-				var dashboard = new dashboardModel({
-					user: user
-				});
-				dashboard.save(function(err, dash) {
-					callback(err, dash);
-				});
-			}
 			else {
-				dash.user = user;
-				callback(err, dash);
+				var notes_count, note_lists_count;
+				noteModel.count({user: mongoose.Types.ObjectId(user._id)}, function(err, count) {
+					if (err)
+						callback(err);
+					else {
+						notes_count = count;
+						console.log(notes_count);
+						noteModel.count({user: mongoose.Types.ObjectId(user._id)}, function(err, count) {
+							if (err)
+								callback(err);
+							else {
+								note_lists_count = count;
+								console.log(note_lists_count);
+								if (!dash) {
+									var dashboard = new dashboardModel({
+										user: user
+									});
+									dashboard.save(function(err, dash) {
+										dash = dash.toObject();
+										dash['notes_count'] = notes_count;
+										dash['note_lists_count'] = note_lists_count;
+										console.log(dash);
+										callback(err, dash);
+									});
+								}
+								else {
+									dash.user = user;
+									dash = dash.toObject();
+									dash['notes_count'] = notes_count;
+									dash['note_lists_count'] = note_lists_count;
+									console.log(dash);
+									callback(err, dash);
+								}
+							}
+						});
+					}
+				});
 			}
 		});
 	};
