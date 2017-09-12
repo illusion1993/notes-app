@@ -25,3 +25,7 @@ body {
 .right-float {
 	float: right;
 }
+
+.auth-form {
+	padding: 30px 0 30px 0;
+}
