@@ -25,6 +25,7 @@ var dashboardControllers = require('./controllers/dashboard')(userModel);
 // Authentication routes
 apiRoutes.post('/register', authControllers.register);
 apiRoutes.post('/login', authControllers.login);
+apiRoutes.get('/is-logged', passport.authenticate('jwt', { session: false }), (req, res) => { res.json({ success: true }) });
 
 // Dashboard routes
 apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), dashboardControllers.dashboard);
@@ -37,7 +38,11 @@ apiRoutes.delete('/dashboard/note-type', passport.authenticate('jwt', { session:
 apiRoutes.post('/dashboard/widget', passport.authenticate('jwt', { session: false }), dashboardControllers.addWidget);
 apiRoutes.delete('/dashboard/widget', passport.authenticate('jwt', { session: false }), dashboardControllers.deleteWidget);
 
-
+var path = require('path');
+app.use('/', express.static(path.resolve(__dirname + '/../client/')));
+app.get('*', function(req, res) {
+	res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+});
 
 
 console.log('App running on port ' + PORT);
